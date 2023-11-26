@@ -23,8 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.workflow.R
 import com.example.workflow.ui.workflow.WorkflowScreen
 
 @Composable
@@ -52,13 +56,16 @@ fun WorkflowMenuScreen() {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
-            Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "",
-                modifier = Modifier.padding(end = 10.dp)
+            Image(imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(end = 10.dp)
                     .size(35.dp),
-                tint = MaterialTheme.colorScheme.background)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background))
             switchComponent()
-            Box(modifier = Modifier.padding(start = 10.dp)
-                    .size(35.dp))
+            Box(modifier = Modifier
+                .padding(start = 10.dp)
+                .size(35.dp))
         }
     }
 

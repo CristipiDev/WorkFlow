@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             WorkFlowTheme {
                 // A surface container using the 'background' color from the theme
                 Surface() {
-                    WorkflowMenuScreen()
+                    WorkflowScreen()
                 }
             }
         }

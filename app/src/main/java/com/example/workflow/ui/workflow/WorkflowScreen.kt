@@ -29,11 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.workflow.domain.model.TaskModel
 
 @Composable
 fun WorkflowScreen(
-    viewModel: WorkflowViewModel = hiltViewModel()
+    viewModel: WorkflowViewModel = hiltViewModel(),
+    navController: NavController,
+    workflowId: Int
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -147,14 +150,13 @@ private fun taskCard(
                 color = textColor, maxLines = 1)
         }
         if (task.taskIsPriority)
-        Text(text = "!",
-            style = MaterialTheme.typography.labelLarge,
-            color = textColor, modifier = Modifier.padding(horizontal = 5.dp))
+            Text(text = "!",
+                style = MaterialTheme.typography.labelLarge,
+                color = textColor, modifier = Modifier.padding(horizontal = 5.dp))
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun preview() {
-    WorkflowScreen()
 }

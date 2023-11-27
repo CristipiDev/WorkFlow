@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,12 +28,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.workflow.R
-import com.example.workflow.ui.workflow.WorkflowScreen
+import com.example.workflow.ui.navigation.AppRoutes
 
 @Composable
 fun WorkflowMenuScreen(
-    viewModel: WorkflowMenuViewModel = hiltViewModel()
+    viewModel: WorkflowMenuViewModel = hiltViewModel(),
+    navController: NavController
 ) {
 
     Column(modifier = Modifier
@@ -54,7 +53,7 @@ fun WorkflowMenuScreen(
             .padding(horizontal = 30.dp)
             .weight(1f)) {
             items(viewModel.dataState.workflowList){workflow ->
-                menuItem(workflow.workflowTitle)
+                menuItem(workflow.workflowId, workflow.workflowTitle, navController)
             }
         }
 
@@ -78,12 +77,15 @@ fun WorkflowMenuScreen(
 
 @Composable
 private fun menuItem(
-    text: String
+    id: Int,
+    text: String,
+    navController: NavController
 ){
     Text(text = text,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.padding(top = 20.dp))
+        modifier = Modifier.padding(top = 20.dp)
+            .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
 }
 
 @Composable
@@ -110,5 +112,4 @@ fun switchComponent() {
 @Preview
 @Composable
 fun Preview() {
-    WorkflowMenuScreen()
 }

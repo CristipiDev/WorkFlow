@@ -14,11 +14,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,12 +26,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.workflow.domain.model.TaskModel
 
 @Composable
-fun WorkflowScreen() {
+fun WorkflowScreen(
+    viewModel: WorkflowViewModel = hiltViewModel()
+) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.primary)
@@ -46,17 +49,17 @@ fun WorkflowScreen() {
             .padding(20.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically,) {
-                    Text(text = "Workflow 1",
+                    Text(text = viewModel.dataState.workflowInfo.workflowTitle,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f))
-                    statusCircularBarAndText()
+                    statusCircularBarAndText(viewModel.uiState.complitedPercentage)
 
                 }
                 Column {
-                    stateColumn("New", 2, false)
-                    stateColumn("In progress", 3, false)
-                    stateColumn("Complited", 1, true)
+                    viewModel.dataState.workflowInfo.stateList.forEach {state ->
+                            stateColumn(state.stateTitle, state.taskList)
+                    }
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(),
@@ -65,7 +68,8 @@ fun WorkflowScreen() {
                     .size(50.dp)
                     .background(
                         MaterialTheme.colorScheme.primary,
-                        shape = CircleShape),
+                        shape = CircleShape
+                    ),
                     contentAlignment = Alignment.Center) {
                     Icon( imageVector = Icons.Filled.Add,
                         contentDescription = "",
@@ -79,11 +83,13 @@ fun WorkflowScreen() {
 }
 
 @Composable
-private fun statusCircularBarAndText(){
+private fun statusCircularBarAndText(
+    percentage: Float
+){
     Box(contentAlignment = Alignment.Center) {
-        Text(text = "70%", style = MaterialTheme.typography.bodySmall,
+        Text(text = "${percentage*100}%", style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.primary)
-        CircularProgressIndicator(progress = 0.7f,
+        CircularProgressIndicator(progress = percentage,
             modifier = Modifier.size(50.dp),
             strokeWidth = 1.dp
         )
@@ -93,28 +99,27 @@ private fun statusCircularBarAndText(){
 @Composable
 private fun stateColumn(
     stateTitle: String,
-    numTasks: Int,
-    isComplited: Boolean
+    taskList: ArrayList<TaskModel>
 ) {
     Text(text = stateTitle, style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 20.dp))
 
     LazyColumn() {
-        items(numTasks){
-            taskCard(isComplited)
+        items(taskList){task ->
+            taskCard(task)
         }
     }
 }
 
 @Composable
 private fun taskCard(
-    isComplited: Boolean
+    task: TaskModel
 ) {
     var textColor = MaterialTheme.colorScheme.background
     var backgroundColor = MaterialTheme.colorScheme.primary
 
-    if (isComplited) {
+    if (task.isCompleted) {
         textColor = MaterialTheme.colorScheme.primary
         backgroundColor = MaterialTheme.colorScheme.background
     }
@@ -134,13 +139,17 @@ private fun taskCard(
         )
         .padding(vertical = 10.dp, horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically) {
-        Column() {
-            Text(text = "Task name",
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = task.taskTitle,
                 style = MaterialTheme.typography.bodyMedium,
                 color = textColor)
-            Text(text = "Description", style = MaterialTheme.typography.bodySmall,
-                color = textColor)
+            Text(text = task.tastDescription, style = MaterialTheme.typography.bodySmall,
+                color = textColor, maxLines = 1)
         }
+        if (task.taskIsPriority)
+        Text(text = "!",
+            style = MaterialTheme.typography.labelLarge,
+            color = textColor, modifier = Modifier.padding(horizontal = 5.dp))
     }
 }
 

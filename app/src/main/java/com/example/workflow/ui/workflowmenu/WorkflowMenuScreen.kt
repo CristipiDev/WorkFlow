@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -28,11 +30,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.workflow.R
 import com.example.workflow.ui.workflow.WorkflowScreen
 
 @Composable
-fun WorkflowMenuScreen() {
+fun WorkflowMenuScreen(
+    viewModel: WorkflowMenuViewModel = hiltViewModel()
+) {
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -45,19 +50,19 @@ fun WorkflowMenuScreen() {
             /*TODO poner el icono de la app*/
         }
 
-        Column(modifier = Modifier
+        LazyColumn(modifier = Modifier
             .padding(horizontal = 30.dp)
             .weight(1f)) {
-            menuItem("Workflow 1")
-            menuItem("Workflow 2")
-            menuItem("Workflow 3")
+            items(viewModel.dataState.workflowList){workflow ->
+                menuItem(workflow.workflowTitle)
+            }
         }
 
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center) {
             Image(imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
-                contentDescription = "",
+                contentDescription = "Light mode",
                 modifier = Modifier
                     .padding(end = 10.dp)
                     .size(35.dp),

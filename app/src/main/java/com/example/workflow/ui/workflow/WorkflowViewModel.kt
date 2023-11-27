@@ -25,17 +25,6 @@ class WorkflowViewModel @Inject constructor(
         complitedPercentage = getPercentageComplited()
     ))
 
-    fun getIsCompleted(state: StateModel, stateList: ArrayList<StateModel>){
-        uiState = if (state == stateList.last()) {
-            uiState.copy(
-                isClompleted = true
-            )
-        } else {
-            uiState.copy(
-                isClompleted = false
-            )
-        }
-    }
 
     fun getPercentageComplited(): Float {
         val lastSize = dataState.workflowInfo.stateList.last().taskList.size

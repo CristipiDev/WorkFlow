@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +43,8 @@ import com.example.workflow.ui.navigation.AppRoutes
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun WorkflowMenuScreen(
@@ -51,56 +54,97 @@ fun WorkflowMenuScreen(
     onThemeUpdated: () -> Unit
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.primary)
-            .padding(bottom = 20.dp)
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    var showFirstColumn by remember { mutableStateOf(true) }
+
+    val firstColumnOffset by animateDpAsState(
+        if (showFirstColumn) 0.dp else (-screenWidth),
+        tween(durationMillis = 500), label = ""
+    )
+
+    val secondColumnOffset by animateDpAsState(
+        if (showFirstColumn) screenWidth else 0.dp,
+        tween(durationMillis = 500), label = ""
+    )
+
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .clickable { navController.navigate(AppRoutes.WorkflowAboutApp.route) }) {
-            Text(text = "ICONO")
-            /*TODO poner el icono de la app*/
-        }
-
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .padding(horizontal = 30.dp)
-                .weight(1f)
+                .fillMaxSize()
+                .offset(x = firstColumnOffset, y = 0.dp)
+                .background(color = MaterialTheme.colorScheme.primary)
+                .padding(bottom = 20.dp)
         ) {
-            items(viewModel.dataState.workflowList) { workflow ->
-                menuItem(workflow.workflowId, workflow.workflowTitle, navController)
+            Box(modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.TopEnd) {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)) {
+                    Text(text = "ICONO")
+                    /*TODO poner el icono de la app*/
+                }
+                Text(text = "i",
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                        .size(50.dp)
+                        .clickable { showFirstColumn = !showFirstColumn },
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.background,
+                    textAlign = TextAlign.Center)
             }
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Image(
-                imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
-                contentDescription = "Light mode",
+
+            LazyColumn(
                 modifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(35.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
-            )
-            viewModel.uiState.alignmentSwitch?.let {
-                switchComponent(
-                    darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme,
-                    it
+                    .padding(horizontal = 30.dp)
+                    .weight(1f)
+            ) {
+                items(viewModel.dataState.workflowList) { workflow ->
+                    menuItem(workflow.workflowId, workflow.workflowTitle, navController)
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
+                    contentDescription = "Light mode",
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .size(35.dp),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
+                )
+                viewModel.uiState.alignmentSwitch?.let {
+                    switchComponent(
+                        darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme,
+                        it
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .size(35.dp)
                 )
             }
-            Box(
-                modifier = Modifier
-                    .padding(start = 10.dp)
-                    .size(35.dp)
-            )
+        }
+
+        Column(modifier = Modifier.fillMaxSize()
+            .offset(x = secondColumnOffset, y = 0.dp)) {
+            Text(text = "About app")
+
+            Box(modifier = Modifier.size(100.dp)
+                .background(Color.Magenta)
+                .clickable { showFirstColumn = !showFirstColumn })
         }
     }
+
+
 
 
 }

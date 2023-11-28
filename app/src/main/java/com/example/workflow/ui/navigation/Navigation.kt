@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.workflow.ui.aboutapp.AboutAppScreen
+import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
 import com.example.workflow.ui.workflow.WorkflowScreen
 import com.example.workflow.ui.workflowmenu.WorkflowMenuScreen
 
@@ -73,18 +73,18 @@ fun Navigation(
             route = AppRoutes.WorkflowAboutApp.route,
             enterTransition = {
                 slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
                     animationSpec = tween(300)
                 )
             }
             ){
-            AboutAppScreen(navController)
+            WorkflowAboutAppScreen(navController)
         }
     }
 }

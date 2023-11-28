@@ -17,7 +17,10 @@ import com.example.workflow.ui.workflow.WorkflowScreen
 import com.example.workflow.ui.workflowmenu.WorkflowMenuScreen
 
 @Composable
-fun Navigation() {
+fun Navigation(
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit
+) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -37,7 +40,8 @@ fun Navigation() {
                     animationSpec = tween(300)
                 )
             }) {
-            WorkflowMenuScreen(navController = navController)
+            WorkflowMenuScreen(navController = navController,
+                darkTheme = darkTheme, onThemeUpdated = onThemeUpdated)
         }
         composable(
             route = AppRoutes.WorkflowInfo.route + "/{id}",

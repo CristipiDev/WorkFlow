@@ -39,7 +39,9 @@ import com.example.workflow.ui.navigation.AppRoutes
 @Composable
 fun WorkflowMenuScreen(
     viewModel: WorkflowMenuViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit
 ) {
 
     Column(modifier = Modifier
@@ -70,7 +72,11 @@ fun WorkflowMenuScreen(
                     .padding(end = 10.dp)
                     .size(35.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background))
-            switchComponent()
+            viewModel.uiState.alignmentSwitch?.let {
+                switchComponent(darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme,
+                    it
+                )
+            }
             Box(modifier = Modifier
                 .padding(start = 10.dp)
                 .size(35.dp))
@@ -94,19 +100,21 @@ private fun menuItem(
 }
 
 @Composable
-fun switchComponent() {
-    //TODO -> add isLight into UiState
-    var isLight by remember { mutableStateOf(true) }
-    var alingSwitch = Alignment.CenterEnd
-    if (isLight) alingSwitch = Alignment.CenterStart
+fun switchComponent(
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit,
+    changeSwitch: (Boolean) -> Unit,
+    alignment: Alignment
+) {
     Box(modifier = Modifier
         .size(width = 60.dp, height = 30.dp)
         .background(
             color = MaterialTheme.colorScheme.background,
             shape = CircleShape
         )
-        .clickable { isLight = !isLight },
-        contentAlignment = alingSwitch){
+        .clickable { onThemeUpdated()
+            changeSwitch(darkTheme)},
+        contentAlignment = alignment){
         Box(modifier = Modifier
             .size(30.dp)
             .background(

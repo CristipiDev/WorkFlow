@@ -20,6 +20,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -35,7 +39,9 @@ import com.example.workflow.ui.navigation.AppRoutes
 @Composable
 fun WorkflowMenuScreen(
     viewModel: WorkflowMenuViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit
 ) {
 
     Column(modifier = Modifier
@@ -66,7 +72,11 @@ fun WorkflowMenuScreen(
                     .padding(end = 10.dp)
                     .size(35.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background))
-            switchComponent()
+            viewModel.uiState.alignmentSwitch?.let {
+                switchComponent(darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme,
+                    it
+                )
+            }
             Box(modifier = Modifier
                 .padding(start = 10.dp)
                 .size(35.dp))
@@ -84,18 +94,27 @@ private fun menuItem(
     Text(text = text,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.padding(top = 20.dp)
+        modifier = Modifier
+            .padding(top = 20.dp)
             .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
 }
 
 @Composable
-fun switchComponent() {
+fun switchComponent(
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit,
+    changeSwitch: (Boolean) -> Unit,
+    alignment: Alignment
+) {
     Box(modifier = Modifier
         .size(width = 60.dp, height = 30.dp)
         .background(
             color = MaterialTheme.colorScheme.background,
             shape = CircleShape
-        )){
+        )
+        .clickable { onThemeUpdated()
+            changeSwitch(darkTheme)},
+        contentAlignment = alignment){
         Box(modifier = Modifier
             .size(30.dp)
             .background(

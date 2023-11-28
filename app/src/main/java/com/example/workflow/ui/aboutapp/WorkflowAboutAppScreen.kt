@@ -30,9 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun WorkflowAboutAppScreen(
-    navController: NavController
-) {
+fun WorkflowAboutAppScreen() {
     /*Column(modifier = Modifier.fillMaxSize()) {
         Text(text = "About app")
 

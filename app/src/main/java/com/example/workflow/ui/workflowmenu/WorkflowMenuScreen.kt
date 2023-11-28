@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -56,16 +57,14 @@ fun WorkflowMenuScreen(
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    var showFirstColumn by remember { mutableStateOf(true) }
-
     val firstColumnOffset by animateDpAsState(
-        if (showFirstColumn) 0.dp else (-screenWidth),
-        tween(durationMillis = 500), label = ""
+        if (viewModel.uiState.showFirstColumn) 0.dp else (-screenWidth),
+        tween(durationMillis = 300), label = ""
     )
 
     val secondColumnOffset by animateDpAsState(
-        if (showFirstColumn) screenWidth else 0.dp,
-        tween(durationMillis = 500), label = ""
+        if (viewModel.uiState.showFirstColumn) screenWidth else 0.dp,
+        tween(durationMillis = 300), label = ""
     )
 
     Box(
@@ -78,24 +77,8 @@ fun WorkflowMenuScreen(
                 .background(color = MaterialTheme.colorScheme.primary)
                 .padding(bottom = 20.dp)
         ) {
-            Box(modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd) {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)) {
-                    Text(text = "ICONO")
-                    /*TODO poner el icono de la app*/
-                }
-                Text(text = "i",
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .size(50.dp)
-                        .clickable { showFirstColumn = !showFirstColumn },
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.background,
-                    textAlign = TextAlign.Center)
-            }
 
+            headerRow(viewModel::setShowFirstColumn)
 
             LazyColumn(
                 modifier = Modifier
@@ -107,31 +90,8 @@ fun WorkflowMenuScreen(
                 }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
-                    contentDescription = "Light mode",
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(35.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
-                )
-                viewModel.uiState.alignmentSwitch?.let {
-                    switchComponent(
-                        darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme,
-                        it
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .size(35.dp)
-                )
-            }
+            switchAndIconComponent(viewModel.uiState.alignmentSwitch,
+                    darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme)
         }
 
         Column(modifier = Modifier.fillMaxSize()
@@ -140,7 +100,7 @@ fun WorkflowMenuScreen(
 
             Box(modifier = Modifier.size(100.dp)
                 .background(Color.Magenta)
-                .clickable { showFirstColumn = !showFirstColumn })
+                .clickable { viewModel.setShowFirstColumn() })
         }
     }
 
@@ -148,6 +108,30 @@ fun WorkflowMenuScreen(
 
 
 }
+
+@Composable
+private fun headerRow(
+    onClickAbout: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.TopEnd) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)) {
+            Text(text = "ICONO")
+            /*TODO poner el icono de la app*/
+        }
+        Text(text = "i",
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .size(50.dp)
+                .clickable { onClickAbout() },
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.background,
+            textAlign = TextAlign.Center)
+    }
+}
+
 
 @Composable
 private fun menuItem(
@@ -161,6 +145,40 @@ private fun menuItem(
         modifier = Modifier
             .padding(top = 20.dp)
             .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
+}
+
+@Composable
+private fun switchAndIconComponent(
+    alignmentSwitch: Alignment?,
+    darkTheme: Boolean,
+    onThemeUpdated: () -> Unit,
+    onSwitchDarkTheme: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Image(
+            imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
+            contentDescription = "Light mode",
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .size(35.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
+        )
+        alignmentSwitch?.let {
+            switchComponent(
+                darkTheme, onThemeUpdated, onSwitchDarkTheme,
+                it
+            )
+        }
+        Box(
+            modifier = Modifier
+                .padding(start = 10.dp)
+                .size(35.dp)
+        )
+    }
 }
 
 @Composable

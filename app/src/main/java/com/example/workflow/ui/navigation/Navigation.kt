@@ -84,7 +84,7 @@ fun Navigation(
                 )
             }
             ){
-            WorkflowAboutAppScreen(navController)
+            WorkflowAboutAppScreen()
         }
     }
 }

@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,5 +23,12 @@ class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
     fun onSwitchDarkTheme(darkTheme: Boolean) {
         uiState = if (!darkTheme) uiState.copy(alignmentSwitch = Alignment.CenterEnd)
         else uiState.copy(alignmentSwitch = Alignment.CenterStart)
+    }
+
+    fun setShowFirstColumn() {
+        val show = !uiState.showFirstColumn
+        uiState = uiState.copy(
+            showFirstColumn = show
+        )
     }
 }

@@ -144,6 +144,7 @@ private fun menuItem(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .padding(top = 20.dp)
+            .fillMaxWidth()
             .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
 }
 

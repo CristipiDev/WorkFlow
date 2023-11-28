@@ -2,11 +2,13 @@ package com.example.workflow.ui.aboutapp
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,11 +34,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.workflow.R
 
 @Composable
 fun WorkflowAboutAppScreen(
@@ -94,6 +100,25 @@ fun WorkflowAboutAppScreen(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Start
                 )
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(30.dp)
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(imageVector = ImageVector.vectorResource(R.drawable.google_play_fill),
+                        contentDescription = "Light mode",
+                        modifier = Modifier.size(35.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background))
+
+                    Text(text = "Rate us on the Play Store",
+                        modifier = Modifier.padding(start = 10.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.background,
+                        textAlign = TextAlign.Center)
+                }
             }
         }
         Text(

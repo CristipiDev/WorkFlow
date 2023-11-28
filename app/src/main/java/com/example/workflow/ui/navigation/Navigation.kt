@@ -68,23 +68,5 @@ fun Navigation(
                 workflowId = id
             )
         }
-
-        composable(
-            route = AppRoutes.WorkflowAboutApp.route,
-            enterTransition = {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                    animationSpec = tween(300)
-                )
-            },
-            exitTransition = {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                    animationSpec = tween(300)
-                )
-            }
-            ){
-            WorkflowAboutAppScreen()
-        }
     }
 }

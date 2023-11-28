@@ -46,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
+import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
 
 @Composable
 fun WorkflowMenuScreen(
@@ -94,13 +95,12 @@ fun WorkflowMenuScreen(
                     darkTheme, onThemeUpdated, viewModel::onSwitchDarkTheme)
         }
 
-        Column(modifier = Modifier.fillMaxSize()
-            .offset(x = secondColumnOffset, y = 0.dp)) {
-            Text(text = "About app")
-
-            Box(modifier = Modifier.size(100.dp)
-                .background(Color.Magenta)
-                .clickable { viewModel.setShowFirstColumn() })
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .offset(x = secondColumnOffset, y = 0.dp)
+            .background(color = MaterialTheme.colorScheme.primary)
+            .padding(20.dp, 0.dp, 20.dp, 20.dp)) {
+            WorkflowAboutAppScreen(viewModel::setShowFirstColumn)
         }
     }
 

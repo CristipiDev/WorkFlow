@@ -1,5 +1,6 @@
 package com.example.workflow.ui.workflow
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

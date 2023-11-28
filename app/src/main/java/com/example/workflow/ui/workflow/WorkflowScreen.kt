@@ -1,5 +1,6 @@
 package com.example.workflow.ui.workflow
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -74,9 +75,9 @@ fun WorkflowScreen(
                     statusCircularBarAndText(viewModel.uiState.complitedPercentage)
 
                 }
-                Column {
-                    viewModel.dataState.workflowInfo.stateList.forEach {state ->
-                            stateColumn(state.stateTitle, state.taskList)
+                LazyColumn() {
+                    items(viewModel.dataState.workflowInfo.stateList) {state ->
+                        stateColumn(state.stateTitle, state.taskList)
                     }
                 }
             }
@@ -123,8 +124,8 @@ private fun stateColumn(
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 20.dp))
 
-    LazyColumn() {
-        items(taskList){task ->
+    Column {
+        taskList.forEach {task ->
             taskCard(task)
         }
     }

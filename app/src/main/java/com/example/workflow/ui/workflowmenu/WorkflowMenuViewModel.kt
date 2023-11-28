@@ -14,4 +14,7 @@ class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
         workflowList = DataProvider.list
     ))
 
+    fun onSwitchLight() {
+
+    }
 }

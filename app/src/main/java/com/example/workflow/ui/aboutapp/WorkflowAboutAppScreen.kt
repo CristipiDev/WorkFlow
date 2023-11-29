@@ -62,7 +62,7 @@ fun WorkflowAboutAppScreen(
                 }
                 Text(
                     text = "WorkFlow",
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center

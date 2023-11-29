@@ -69,7 +69,7 @@ fun WorkflowScreen(
                 Row(verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.verticalScroll(scrollState)) {
                     Text(text = viewModel.dataState.workflowInfo.workflowTitle,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f))
                     statusCircularBarAndText(viewModel.uiState.complitedPercentage)
@@ -167,7 +167,7 @@ private fun taskCard(
         }
         if (task.taskIsPriority)
             Text(text = "!",
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelMedium,
                 color = textColor, modifier = Modifier.padding(horizontal = 5.dp))
     }
 }

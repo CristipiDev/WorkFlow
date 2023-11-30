@@ -3,6 +3,7 @@ package com.example.workflow.ui.workflow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.workflow.domain.model.DataProvider.Companion.list
@@ -40,5 +41,24 @@ class WorkflowViewModel @Inject constructor(
             if (workflow.workflowId == id) return workflow
         }
         return WorkflowModel()
+    }
+
+    fun setIconAddTaskHeight(height: Dp) {
+        uiState = uiState.copy(
+            iconHeight = height
+        )
+    }
+
+    fun setShowNewTaskBox() {
+        val shown = !uiState.showNewTaskBox
+        uiState = uiState.copy(
+            showNewTaskBox = shown
+        )
+    }
+
+    fun setNewTaskBoxHeight(height: Dp) {
+        uiState = uiState.copy(
+            newTaskBoxHeight = height
+        )
     }
 }

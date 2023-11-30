@@ -44,10 +44,13 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.workflow.domain.model.TaskModel
+import com.example.workflow.ui.workflow.boxnew.NewItemBox
 
 @Composable
 fun WorkflowScreen(
@@ -67,17 +70,15 @@ fun WorkflowScreen(
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val density = LocalDensity.current
-    var iconHeight by remember { mutableStateOf(0.dp) }
     var newTaskBoxHeight by remember { mutableStateOf(0.dp) }
 
-    var showNewTaskBox by remember { mutableStateOf(false) }
     val rotateIcon by animateFloatAsState(
-        if (showNewTaskBox) -45f else 0f,
+        if (viewModel.uiState.showNewTaskBox) -45f else 0f,
         tween(durationMillis = 300), label = ""
     )
 
     val newTaksBoxOffset by animateDpAsState(
-        if (showNewTaskBox) newTaskBoxHeight+20.dp else 0.dp,
+        if (viewModel.uiState.showNewTaskBox) viewModel.uiState.newTaskBoxHeight+20.dp else 0.dp,
         tween(durationMillis = 300), label = ""
     )
 
@@ -99,60 +100,22 @@ fun WorkflowScreen(
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f))
-                    statusCircularBarAndText(viewModel.uiState.complitedPercentage)
+                    StatusCircularBarAndText(viewModel.uiState.complitedPercentage)
 
                 }
                 LazyColumn() {
                     items(viewModel.dataState.workflowInfo.stateList) {state ->
-                        stateColumn(state.stateTitle, state.taskList)
+                        StateColumn(state.stateTitle, state.taskList)
                     }
                 }
             }
+            val offsetBox = screenHeight-40.dp-viewModel.uiState.iconHeight-20.dp-newTaksBoxOffset
+            //Box of the new task and state
             Column(modifier = Modifier.fillMaxWidth()
-                .offset(y = screenHeight-40.dp-iconHeight-20.dp-newTaksBoxOffset)) {
-                Row(modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .onGloballyPositioned {
-                        iconHeight = with(density) {
-                            it.size.height.toDp()
-                        }
-                    },
-                    horizontalArrangement = Arrangement.End) {
-                    Box(modifier = Modifier
-                        .size(50.dp, 40.dp)
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-                        .clickable { showNewTaskBox = !showNewTaskBox }
-                        .padding(top = 5.dp),
-                        contentAlignment = Alignment.Center) {
-                        Icon( imageVector = Icons.Filled.Add,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.background,
-                            modifier = Modifier
-                                .rotate(rotateIcon)
-                                .size(40.dp))
-                    }
-                }
+                .offset(y = offsetBox)) {
+                NewItemBox(viewModel::setIconAddTaskHeight, density, viewModel::setShowNewTaskBox, rotateIcon,
+                    viewModel::setNewTaskBoxHeight)
 
-                Column(modifier = Modifier
-                    .background(
-                        MaterialTheme.colorScheme.primary,
-                        RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
-                    )
-                    .fillMaxWidth()
-                    .wrapContentHeight(Alignment.CenterVertically)
-                    .padding(20.dp)
-                    .onGloballyPositioned {
-                        newTaskBoxHeight = with(density) {
-                            it.size.height.toDp()
-                        }
-                    })
-                {
-                    Text(text = "New task",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.background)
-                }
             }
 
         }
@@ -161,7 +124,7 @@ fun WorkflowScreen(
 }
 
 @Composable
-private fun statusCircularBarAndText(
+private fun StatusCircularBarAndText(
     percentage: Float
 ){
     Box(contentAlignment = Alignment.Center) {
@@ -175,7 +138,7 @@ private fun statusCircularBarAndText(
 }
 
 @Composable
-private fun stateColumn(
+private fun StateColumn(
     stateTitle: String,
     taskList: ArrayList<TaskModel>
 ) {
@@ -185,13 +148,13 @@ private fun stateColumn(
 
     Column {
         taskList.forEach {task ->
-            taskCard(task)
+            TaskCard(task)
         }
     }
 }
 
 @Composable
-private fun taskCard(
+private fun TaskCard(
     task: TaskModel
 ) {
     var textColor = MaterialTheme.colorScheme.background

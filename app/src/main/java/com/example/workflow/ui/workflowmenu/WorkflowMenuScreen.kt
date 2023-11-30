@@ -25,9 +25,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Button
@@ -51,20 +48,16 @@ import androidx.navigation.NavController
 import com.example.workflow.R
 import com.example.workflow.ui.navigation.AppRoutes
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
+import com.example.workflow.ui.common.CustomBasicTextFieldComponent
+import com.example.workflow.ui.common.SwitchAndIconComponent
+import com.example.workflow.ui.common.SwitchComponent
+import com.example.workflow.ui.common.TextButtonComponent
 
 @Composable
 fun WorkflowMenuScreen(
@@ -109,7 +102,7 @@ fun WorkflowMenuScreen(
                 }
                 Box(modifier = Modifier
                     .padding(30.dp, 40.dp, 30.dp, 0.dp)) {
-                    textButtonComponent(
+                    TextButtonComponent(
                         "+ Add Workflow",
                         viewModel::setColorsTextButton,
                         MaterialTheme.colorScheme.primary,
@@ -139,9 +132,6 @@ fun WorkflowMenuScreen(
             MaterialTheme.colorScheme.background,
             MaterialTheme.colorScheme.primary)
     }
-
-
-
 
 }
 
@@ -184,70 +174,7 @@ private fun MenuItem(
             .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
 }
 
-@Composable
-private fun SwitchAndIconComponent(
-    alignmentSwitch: Alignment?,
-    darkTheme: Boolean,
-    onThemeUpdated: () -> Unit,
-    onSwitchDarkTheme: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Image(
-            imageVector = ImageVector.vectorResource(R.drawable.lightbulb_fill),
-            contentDescription = "Light mode",
-            modifier = Modifier
-                .padding(end = 10.dp)
-                .size(35.dp),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
-        )
-        alignmentSwitch?.let {
-            SwitchComponent(
-                darkTheme, onThemeUpdated, onSwitchDarkTheme,
-                it
-            )
-        }
-        Box(
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .size(35.dp)
-        )
-    }
-}
 
-@Composable
-fun SwitchComponent(
-    darkTheme: Boolean,
-    onThemeUpdated: () -> Unit,
-    changeSwitch: (Boolean) -> Unit,
-    alignment: Alignment
-) {
-    Box(modifier = Modifier
-        .size(width = 60.dp, height = 30.dp)
-        .background(
-            color = MaterialTheme.colorScheme.background,
-            shape = CircleShape
-        )
-        .clickable {
-            onThemeUpdated()
-            changeSwitch(darkTheme)
-        },
-        contentAlignment = alignment){
-        Box(modifier = Modifier
-            .size(30.dp)
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = CircleShape
-            )
-            .border(
-                BorderStroke(2.dp, MaterialTheme.colorScheme.background),
-                shape = CircleShape
-            ))
-    }
-}
 
 @Composable
 fun NewWorkflowDialog(
@@ -284,102 +211,10 @@ fun NewWorkflowDialog(
                     Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
                     CustomBasicTextFieldComponent(textFieldValue, onChangeTextField)
                     Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
-                    textButtonComponent("Save", onPressedButtonListener, backgroundColor, buttonMainColor, {})
+                    TextButtonComponent("Save", onPressedButtonListener, backgroundColor, buttonMainColor, {})
                 }
 
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun CustomBasicTextFieldComponent (
-    valueTextField: String,
-    onChangeTextField: (String) -> Unit,
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
-    BasicTextField(
-        maxLines = 1,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background, shape = CircleShape)
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), shape = CircleShape),
-        value = valueTextField,
-        onValueChange = { onChangeTextField(it) },
-        textStyle = TextStyle(
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.ExtraLight,
-            fontSize = 20.sp,
-            lineHeight = 24.sp,
-            letterSpacing = 0.5.sp,
-            color = MaterialTheme.colorScheme.primary),
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Done,
-            keyboardType = KeyboardType.Text
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-            }),
-        decorationBox = { innerTextField ->
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 5.dp, horizontal = 15.dp)) {
-                innerTextField()
-            }
-        }
-    )
-}
-
-@Composable
-private fun textButtonComponent(
-    text: String,
-    onPressedListener: (Boolean, Color) -> Pair<Color, Color>,
-    backgroundColor: Color,
-    buttonMainColor: Color,
-    onClickButton: () -> Unit
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    Button(onClick = { onClickButton() },
-        modifier = Modifier
-            .fillMaxWidth(),
-        interactionSource = interactionSource,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor
-        ),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = onPressedListener(isPressed, buttonMainColor).second,
-                    shape = CircleShape
-                )
-                .border(
-                    BorderStroke(1.dp, onPressedListener(isPressed, buttonMainColor).first),
-                    shape = CircleShape
-                )
-                .padding(vertical = 10.dp, horizontal = 20.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelSmall,
-                color = onPressedListener(isPressed, buttonMainColor).first,
-                fontWeight = FontWeight.ExtraLight,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-
         }
     }
 }

@@ -70,7 +70,6 @@ fun WorkflowScreen(
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val density = LocalDensity.current
-    var newTaskBoxHeight by remember { mutableStateOf(0.dp) }
 
     val rotateIcon by animateFloatAsState(
         if (viewModel.uiState.showNewTaskBox) -45f else 0f,
@@ -78,7 +77,9 @@ fun WorkflowScreen(
     )
 
     val newTaksBoxOffset by animateDpAsState(
-        if (viewModel.uiState.showNewTaskBox) viewModel.uiState.newTaskBoxHeight+20.dp else 0.dp,
+        if (viewModel.uiState.showNewTaskBox)
+            viewModel.uiState.newTaskBoxHeight+20.dp+viewModel.uiState.titleNewStateHeight+40.dp
+        else 0.dp,
         tween(durationMillis = 300), label = ""
     )
 
@@ -113,8 +114,7 @@ fun WorkflowScreen(
             //Box of the new task and state
             Column(modifier = Modifier.fillMaxWidth()
                 .offset(y = offsetBox)) {
-                NewItemBox(viewModel::setIconAddTaskHeight, density, viewModel::setShowNewTaskBox, rotateIcon,
-                    viewModel::setNewTaskBoxHeight)
+                NewItemBox(viewModel, density, rotateIcon)
 
             }
 

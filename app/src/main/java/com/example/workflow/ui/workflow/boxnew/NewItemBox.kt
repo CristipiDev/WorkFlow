@@ -22,25 +22,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.workflow.ui.workflow.WorkflowViewModel
 
 @Composable
 fun NewItemBox(
-    setIconHeight: (Dp) -> Unit,
-   density: Density,
-   setShowNewTaskBox: () -> Unit,
-   rotateIcon: Float,
-   setNewTaskBoxHeight: (Dp) -> Unit
+    viewModel: WorkflowViewModel,
+    density: Density,
+    rotateIcon: Float
 ) {
     //Add button
-    Row(modifier = Modifier.fillMaxWidth()
+    Row(modifier = Modifier
+        .fillMaxWidth()
         .padding(horizontal = 20.dp)
         .onGloballyPositioned {
             val iconHeight = with(density) {
                 it.size.height.toDp()
             }
-            setIconHeight(iconHeight)
+            viewModel.setIconAddTaskHeight(iconHeight)
         },
         horizontalArrangement = Arrangement.End) {
         Box(modifier = Modifier
@@ -49,7 +49,7 @@ fun NewItemBox(
                 MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
             )
-            .clickable { setShowNewTaskBox() }
+            .clickable { viewModel.setShowNewTaskBox() }
             .padding(top = 5.dp),
             contentAlignment = Alignment.Center) {
             Icon( imageVector = Icons.Filled.Add,
@@ -74,11 +74,44 @@ fun NewItemBox(
             val newTaskBoxHeight = with(density) {
                 it.size.height.toDp()
             }
-            setNewTaskBoxHeight(newTaskBoxHeight)
+            viewModel.setNewTaskBoxHeight(newTaskBoxHeight)
         })
     {
         Text(text = "New task",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.background)
+    }
+
+    //Data new state
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .background(
+            MaterialTheme.colorScheme.primary)) {
+        Column(modifier = Modifier
+            .background(
+                MaterialTheme.colorScheme.background,
+                RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
+            )
+            .fillMaxWidth()
+            .wrapContentHeight(Alignment.CenterVertically)
+            .padding(20.dp)
+            .onGloballyPositioned {
+                val newTaskBoxHeight = with(density) {
+                    it.size.height.toDp()
+                }
+                viewModel.setNewTaskBoxHeight(newTaskBoxHeight)
+            })
+        {
+            Text(text = "New state",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.onGloballyPositioned {
+                    val titleNewStateHeight = with(density) {
+                        it.size.height.toDp()
+                    }
+                    viewModel.setTitleNewStateHeight(titleNewStateHeight)
+                })
+        }
     }
 }

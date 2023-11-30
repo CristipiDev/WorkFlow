@@ -61,4 +61,10 @@ class WorkflowViewModel @Inject constructor(
             newTaskBoxHeight = height
         )
     }
+
+    fun setTitleNewStateHeight(height: Dp) {
+        uiState = uiState.copy(
+            titleNewStateHeight = height
+        )
+    }
 }

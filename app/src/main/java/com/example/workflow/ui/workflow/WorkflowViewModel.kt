@@ -49,8 +49,7 @@ class WorkflowViewModel @Inject constructor(
             showNewStateBox = false
         )
     }
-    fun setShowNewStateBox() {
-        val shown = !uiState.showNewStateBox
+    fun setShowNewStateBox(shown: Boolean) {
         uiState = uiState.copy(
             showNewStateBox = shown
         )

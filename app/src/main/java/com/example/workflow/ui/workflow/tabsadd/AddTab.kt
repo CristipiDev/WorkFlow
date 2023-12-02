@@ -101,7 +101,7 @@ fun AddTab(
                 }
                 viewModel.setTitleNewTaskHeight(titleNewTaskHeight)
             }
-                .clickable { viewModel.setShowNewTabsBox() })
+                .clickable { viewModel.setShowNewStateBox(false) })
         Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
         Text(text = "Name:",
             style = MaterialTheme.typography.headlineMedium,
@@ -126,14 +126,14 @@ fun AddTab(
         .background(
             MaterialTheme.colorScheme.primary
         )
-        .clickable {viewModel.setShowNewStateBox() }
+        .clickable {viewModel.setShowNewStateBox(true) }
         .onGloballyPositioned {
             val newStateBoxHeight = with(density) {
                 it.size.height.toDp()
             }
             viewModel.setNewStateBoxHeight(newStateBoxHeight)
         }
-        /*.offset(0.dp, -newStateBoxOffset)*/) {
+        .offset(0.dp, -newStateBoxOffset)) {
         Column(modifier = Modifier
             .background(
                 MaterialTheme.colorScheme.background,

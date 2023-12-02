@@ -82,6 +82,8 @@ fun WorkflowScreen(
                 shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
             )) {
             Column(modifier = Modifier.padding(20.dp)) {
+
+                //Header title of workflow and percentage
                 Row(verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.verticalScroll(scrollState)) {
                     Text(text = viewModel.dataState.workflowInfo.workflowTitle,
@@ -91,6 +93,8 @@ fun WorkflowScreen(
                     StatusCircularBarAndText(viewModel.uiState.complitedPercentage)
 
                 }
+
+                //Body
                 LazyColumn() {
                     items(viewModel.dataState.workflowInfo.stateList) {state ->
                         StateColumn(state.stateTitle, state.taskList)

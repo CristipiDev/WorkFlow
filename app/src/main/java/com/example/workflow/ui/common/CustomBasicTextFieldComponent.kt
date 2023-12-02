@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,6 +23,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -30,7 +33,8 @@ fun CustomBasicTextFieldComponent (
     valueTextField: String,
     onChangeTextField: (String) -> Unit,
     backgroundColor: Color,
-    textColor: Color
+    textColor: Color,
+    textFieldHeight: Dp? = null
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -40,8 +44,8 @@ fun CustomBasicTextFieldComponent (
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .background(backgroundColor, shape = CircleShape)
-            .border(BorderStroke(1.dp, textColor), shape = CircleShape),
+            .background(backgroundColor, shape = RoundedCornerShape(20.dp))
+            .border(BorderStroke(1.dp, textColor), shape = RoundedCornerShape(20.dp)),
         value = valueTextField,
         onValueChange = { onChangeTextField(it) },
         textStyle = TextStyle(
@@ -61,10 +65,23 @@ fun CustomBasicTextFieldComponent (
                 focusManager.clearFocus()
             }),
         decorationBox = { innerTextField ->
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 5.dp, horizontal = 15.dp)) {
-                innerTextField()
+            textFieldHeight?.let {height ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(height)
+                        .padding(vertical = 5.dp, horizontal = 15.dp)
+                ) {
+                    innerTextField()
+                }
+            } ?: run {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 5.dp, horizontal = 15.dp)
+                ) {
+                    innerTextField()
+                }
             }
         }
     )

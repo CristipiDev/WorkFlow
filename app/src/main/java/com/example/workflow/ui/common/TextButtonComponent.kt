@@ -23,11 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.workflow.ui.utils.ChangeColorsTextButtonOnPressedUtils
 
 @Composable
 fun TextButtonComponent(
     text: String,
-    onPressedListener: (Boolean, Color) -> Pair<Color, Color>,
     backgroundColor: Color,
     buttonMainColor: Color,
     onClickButton: () -> Unit
@@ -49,11 +49,11 @@ fun TextButtonComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = onPressedListener(isPressed, buttonMainColor).second,
+                    color = ChangeColorsTextButtonOnPressedUtils(isPressed, buttonMainColor).second,
                     shape = CircleShape
                 )
                 .border(
-                    BorderStroke(1.dp, onPressedListener(isPressed, buttonMainColor).first),
+                    BorderStroke(1.dp, ChangeColorsTextButtonOnPressedUtils(isPressed, buttonMainColor).first),
                     shape = CircleShape
                 )
                 .padding(vertical = 10.dp, horizontal = 20.dp),
@@ -63,7 +63,7 @@ fun TextButtonComponent(
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelSmall,
-                color = onPressedListener(isPressed, buttonMainColor).first,
+                color = ChangeColorsTextButtonOnPressedUtils(isPressed, buttonMainColor).first,
                 fontWeight = FontWeight.ExtraLight,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center

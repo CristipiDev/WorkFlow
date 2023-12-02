@@ -3,13 +3,10 @@ package com.example.workflow.ui.workflow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.workflow.domain.model.DataProvider.Companion.list
-import com.example.workflow.domain.model.StateModel
-import com.example.workflow.domain.model.TaskModel
 import com.example.workflow.domain.model.WorkflowModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -45,10 +42,17 @@ class WorkflowViewModel @Inject constructor(
     }
 
     /** Show new task tab or new State **/
-    fun setShowNewTaskBox() {
-        val shown = !uiState.showNewTaskBox
+    fun setShowNewTabsBox() {
+        val showTask = !uiState.showNewTaskBox
         uiState = uiState.copy(
-            showNewTaskBox = shown
+            showNewTaskBox = showTask,
+            showNewStateBox = false
+        )
+    }
+    fun setShowNewStateBox() {
+        val shown = !uiState.showNewStateBox
+        uiState = uiState.copy(
+            showNewStateBox = shown
         )
     }
 
@@ -59,6 +63,11 @@ class WorkflowViewModel @Inject constructor(
         )
     }
 
+    fun setTitleNewTaskHeight(height: Dp) {
+        uiState = uiState.copy(
+            titleNewTaskHeight = height
+        )
+    }
     fun setTitleNewStateHeight(height: Dp) {
         uiState = uiState.copy(
             titleNewStateHeight = height
@@ -70,7 +79,11 @@ class WorkflowViewModel @Inject constructor(
             newTaskBoxHeight = height
         )
     }
-
+    fun setNewStateBoxHeight(height: Dp) {
+        uiState = uiState.copy(
+            newStateBoxHeight = height
+        )
+    }
 
 
 }

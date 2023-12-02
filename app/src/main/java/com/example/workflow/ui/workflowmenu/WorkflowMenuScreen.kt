@@ -209,7 +209,8 @@ fun NewWorkflowDialog(
                         modifier = Modifier.clickable { onDismissRequest() }
                     )
                     Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
-                    CustomBasicTextFieldComponent(textFieldValue, onChangeTextField)
+                    CustomBasicTextFieldComponent(textFieldValue, onChangeTextField,
+                        MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
                     TextButtonComponent("Save", onPressedButtonListener, backgroundColor, buttonMainColor, {})
                 }

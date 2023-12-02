@@ -3,6 +3,7 @@ package com.example.workflow.ui.workflow
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -27,7 +28,7 @@ class WorkflowViewModel @Inject constructor(
     ))
 
 
-    fun getPercentageComplited(): Float {
+    private fun getPercentageComplited(): Float {
         val lastSize = dataState.workflowInfo.stateList.last().taskList.size
         var allSize = 0.0f
         dataState.workflowInfo.stateList.forEach {
@@ -43,16 +44,24 @@ class WorkflowViewModel @Inject constructor(
         return WorkflowModel()
     }
 
+    /** Show new task tab or new State **/
+    fun setShowNewTaskBox() {
+        val shown = !uiState.showNewTaskBox
+        uiState = uiState.copy(
+            showNewTaskBox = shown
+        )
+    }
+
+    /** Add Button height **/
     fun setIconAddTaskHeight(height: Dp) {
         uiState = uiState.copy(
             iconHeight = height
         )
     }
 
-    fun setShowNewTaskBox() {
-        val shown = !uiState.showNewTaskBox
+    fun setTitleNewStateHeight(height: Dp) {
         uiState = uiState.copy(
-            showNewTaskBox = shown
+            titleNewStateHeight = height
         )
     }
 
@@ -62,9 +71,6 @@ class WorkflowViewModel @Inject constructor(
         )
     }
 
-    fun setTitleNewStateHeight(height: Dp) {
-        uiState = uiState.copy(
-            titleNewStateHeight = height
-        )
-    }
+
+
 }

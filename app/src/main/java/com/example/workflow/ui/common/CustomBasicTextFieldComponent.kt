@@ -10,10 +10,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +29,10 @@ import androidx.compose.ui.unit.sp
 fun CustomBasicTextFieldComponent (
     valueTextField: String,
     onChangeTextField: (String) -> Unit,
+    backgroundColor: Color,
+    textColor: Color
 ) {
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -37,8 +40,8 @@ fun CustomBasicTextFieldComponent (
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background, shape = CircleShape)
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), shape = CircleShape),
+            .background(backgroundColor, shape = CircleShape)
+            .border(BorderStroke(1.dp, textColor), shape = CircleShape),
         value = valueTextField,
         onValueChange = { onChangeTextField(it) },
         textStyle = TextStyle(
@@ -47,7 +50,7 @@ fun CustomBasicTextFieldComponent (
             fontSize = 20.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp,
-            color = MaterialTheme.colorScheme.primary),
+            color = textColor),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Text

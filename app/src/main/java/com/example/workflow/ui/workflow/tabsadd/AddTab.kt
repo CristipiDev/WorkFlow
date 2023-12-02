@@ -42,7 +42,7 @@ fun AddTab(
 
     val newStateBoxOffset by animateDpAsState(
         if (viewModel.uiState.showNewStateBox)
-            viewModel.uiState.newStateBoxHeight
+            viewModel.uiState.newStateBoxHeight-40.dp-viewModel.uiState.titleNewStateHeight
         else 0.dp,
         tween(durationMillis = 300), label = ""
     )

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -39,13 +40,6 @@ fun AddTab(
     density: Density,
     rotateIcon: Float
 ) {
-
-    val newStateBoxOffset by animateDpAsState(
-        if (viewModel.uiState.showNewStateBox)
-            viewModel.uiState.newStateBoxHeight-40.dp-viewModel.uiState.titleNewStateHeight
-        else 0.dp,
-        tween(durationMillis = 300), label = ""
-    )
 
     //Add button
     Row(modifier = Modifier
@@ -100,8 +94,7 @@ fun AddTab(
                     it.size.height.toDp()
                 }
                 viewModel.setTitleNewTaskHeight(titleNewTaskHeight)
-            }
-                .clickable { viewModel.setShowNewStateBox(false) })
+            })
         Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
         Text(text = "Name:",
             style = MaterialTheme.typography.headlineMedium,
@@ -118,50 +111,5 @@ fun AddTab(
         Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
         TextButtonComponent("Save", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.background, {})
 
-    }
-
-    //Data new state
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .background(
-            MaterialTheme.colorScheme.primary
-        )
-        .clickable {viewModel.setShowNewStateBox(true) }
-        .onGloballyPositioned {
-            val newStateBoxHeight = with(density) {
-                it.size.height.toDp()
-            }
-            viewModel.setNewStateBoxHeight(newStateBoxHeight)
-        }
-        .offset(0.dp, -newStateBoxOffset)) {
-        Column(modifier = Modifier
-            .background(
-                MaterialTheme.colorScheme.background,
-                RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
-            )
-            .fillMaxWidth()
-            .wrapContentHeight(Alignment.CenterVertically)
-            .padding(20.dp))
-        {
-            Text(text = "New state",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.onGloballyPositioned {
-                    val titleNewStateHeight = with(density) {
-                        it.size.height.toDp()
-                    }
-                    viewModel.setTitleNewStateHeight(titleNewStateHeight)
-                })
-
-            Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
-            Text(text = "Name:",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary)
-            CustomBasicTextFieldComponent("", {}, MaterialTheme.colorScheme.background
-                , MaterialTheme.colorScheme.primary)
-
-            Spacer(modifier = Modifier.fillMaxWidth().height(5.dp))
-            TextButtonComponent("Save", MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.primary, {})
-        }
     }
 }

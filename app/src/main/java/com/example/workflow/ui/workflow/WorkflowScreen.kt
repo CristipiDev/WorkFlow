@@ -64,10 +64,8 @@ fun WorkflowScreen(
     )
 
     val newTaksBoxOffset by animateDpAsState(
-        if (viewModel.uiState.showNewTaskBox && !viewModel.uiState.showNewStateBox)
-            viewModel.uiState.newTaskBoxHeight+20.dp+viewModel.uiState.titleNewStateHeight+40.dp
-        else if (viewModel.uiState.showNewTaskBox && viewModel.uiState.showNewStateBox)
-            viewModel.uiState.newTaskBoxHeight+20.dp+viewModel.uiState.titleNewStateHeight+40.dp
+        if (viewModel.uiState.showNewTaskBox)
+            viewModel.uiState.newTaskBoxHeight+20.dp
         else 0.dp,
         tween(durationMillis = 300), label = ""
     )

@@ -1,7 +1,6 @@
 package com.example.workflow.ui.workflow
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,6 +42,8 @@ fun WorkflowScreen(
     navController: NavController,
     workflowId: Int
 ) {
+
+
     val scrollState = rememberScrollState()
 
     LaunchedEffect(
@@ -56,15 +55,11 @@ fun WorkflowScreen(
     }
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val density = LocalDensity.current
 
-    val rotateIcon by animateFloatAsState(
-        if (viewModel.uiState.showNewTaskBox) -45f else 0f,
-        tween(durationMillis = 300), label = ""
-    )
+
 
     val newTaksBoxOffset by animateDpAsState(
-        if (viewModel.uiState.showNewTaskBox)
+        if (viewModel.uiState.expandedTaskBox)
             viewModel.uiState.newTaskBoxHeight+20.dp
         else 0.dp,
         tween(durationMillis = 300), label = ""
@@ -75,13 +70,15 @@ fun WorkflowScreen(
         .background(MaterialTheme.colorScheme.primary)
         .padding(top = 40.dp)) {
 
-        Box(modifier = Modifier
+        Column(modifier = Modifier
             .fillMaxSize()
             .background(
                 MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
             )) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier
+                .padding(20.dp)
+                .weight(1f)) {
 
                 //Header title of workflow and percentage
                 Row(verticalAlignment = Alignment.CenterVertically,
@@ -103,16 +100,15 @@ fun WorkflowScreen(
             }
             val offsetBox = screenHeight-40.dp-viewModel.uiState.iconHeight-20.dp-newTaksBoxOffset
             //Box of the new task and state
-            Column(modifier = Modifier.fillMaxWidth()
-                .offset(y = offsetBox)) {
-                AddTab(viewModel, density, rotateIcon)
+            AddTab(viewModel)
 
-            }
 
         }
     }
 
 }
+
+
 
 @Composable
 private fun StatusCircularBarAndText(

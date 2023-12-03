@@ -5,8 +5,7 @@ import androidx.compose.ui.unit.dp
 
 data class WorkflowUiState (
     val complitedPercentage: Float = 0.0f,
-    val iconHeight: Dp = 0.dp,
-    val showNewTaskBox: Boolean = false,
-    val newTaskBoxHeight: Dp = 0.dp,
-    val titleNewTaskHeight: Dp = 0.dp
+    val iconHeight: Dp = 54.dp,
+    val expandedTaskBox: Boolean = false,
+    val newTaskBoxHeight: Dp = 0.dp
 )

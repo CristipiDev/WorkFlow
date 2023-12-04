@@ -146,11 +146,6 @@ fun AddTab(
                         .padding(20.dp)
                 )
                 {
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(5.dp)
-                    )
                     Text(
                         text = "Name:",
                         style = MaterialTheme.typography.headlineMedium,
@@ -208,39 +203,26 @@ fun AddTab(
                         .padding(20.dp)
                 )
                 {
+                    Text(
+                        text = "New State",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(5.dp)
+                            .height(20.dp)
                     )
                     Text(
                         text = "Name:",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colorScheme.primary
                     )
                     CustomBasicTextFieldComponent(
                         "",
                         {},
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background
-                    )
-
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(5.dp)
-                    )
-                    Text(
-                        text = "Description:",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.background
-                    )
-                    CustomBasicTextFieldComponent(
-                        "",
-                        {},
-                        MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        200.dp
+                        MaterialTheme.colorScheme.primary
                     )
                     Spacer(
                         modifier = Modifier
@@ -249,8 +231,8 @@ fun AddTab(
                     )
                     TextButtonComponent(
                         "Save",
-                        MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
+                        MaterialTheme.colorScheme.primary,
                         {})
 
                 }

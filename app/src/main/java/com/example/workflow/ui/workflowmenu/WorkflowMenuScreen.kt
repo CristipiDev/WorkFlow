@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -120,17 +121,17 @@ fun WorkflowMenuScreen(
 private fun HeaderRow(
     onClickAbout: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.TopEnd) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)) {
-            Text(text = "ICONO")
-            /*TODO poner el icono de la app*/
-        }
+    Row(modifier = Modifier.fillMaxWidth()
+        .height(80.dp)
+        .padding(horizontal = 10.dp)) {
+        Text(text = "WorkFlow",
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.background)
+        /*TODO poner el icono de la app*/
+
         Text(text = "i",
             modifier = Modifier
-                .padding(horizontal = 10.dp)
                 .size(50.dp)
                 .clickable { onClickAbout() },
             style = MaterialTheme.typography.labelLarge,

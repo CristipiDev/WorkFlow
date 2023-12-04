@@ -93,7 +93,7 @@ private fun AddButton(
 
     //Add button
     Row(modifier = Modifier
-        .size(buttonWidth, 40.dp)
+        .size(buttonWidth+1.dp, 40.dp)
         .background(
             MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)

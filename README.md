@@ -18,10 +18,23 @@ I also used MVVM and clean architecture for the layout of the project.
 </a>
 
 # Main page - Menu
-The main page in this project is the menu in witch you can select the workflow that you want to see. Also at the bottom of the page you will see a custom switch 
-that allows you to switch between themes.</br>
+The main page in this project is the menu in witch you can select the workflow that you want to see, but also, add, edit and delete the workflows that are already there.
+</br>
+![addNewWorkflowLight](https://github.com/CristipiDev/WorkFlow/assets/145572177/3799711f-1f89-4459-9e17-8c82a296a860)
+![addNewWorkflowDark](https://github.com/CristipiDev/WorkFlow/assets/145572177/bd020704-6318-4115-97f8-c1fd838a1b95)
 
-![switch](https://github.com/CristipiDev/WorkFlow/assets/145572177/0e6a1c96-15e0-42b1-94ad-4eccb23d233b)
+</br>
+At the right top of the page (the "i" button), you will go to the "About us/Info" page. I added a slideIn/OutHorizontal animation to switch between pages:</br>
+
+![aboutUsAnimationLight](https://github.com/CristipiDev/WorkFlow/assets/145572177/37be6fbe-cac0-4f7d-960e-eab770f9d6af)
+
+![aboutUsAnimationDark](https://github.com/CristipiDev/WorkFlow/assets/145572177/7eef276a-04ac-4a1e-bac9-ce7ee3a95087)
+
+
+</br>
+And also at the bottom of the page you will see a custom switch that allows you to switch between themes.</br>
+
+![lightswitch](https://github.com/CristipiDev/WorkFlow/assets/145572177/e5023640-b873-4de2-ac31-884c8256b092)
 
 To navigate from the main page (the menu) to the info page I added this animation:</br>
 ![navMenuInfo](https://github.com/CristipiDev/WorkFlow/assets/145572177/c4b3ec27-b091-4e8a-a9d6-85ac3c6638d3)

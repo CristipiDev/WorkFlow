@@ -81,11 +81,12 @@ fun AddTab(
     )
 
     val buttonWidth by animateDpAsState(
-        targetValue = if (viewModel.uiState.expandedTaskBox) screenWidth else 50.dp,
+        targetValue = if (!viewModel.uiState.expandedTaskBox && !viewModel.uiState.expandedStateBox) 50.dp
+        else screenWidth,
         tween(durationMillis = 300), label = ""
     )
     val rotateIcon by animateFloatAsState(
-        if (viewModel.uiState.expandedTaskBox) -45f else 0f,
+        if (viewModel.uiState.expandNewBox) -45f else 0f,
         tween(durationMillis = 300), label = ""
     )
     Column(
@@ -107,19 +108,19 @@ fun AddTab(
                 viewModel.setIconAddTaskHeight(iconHeight)
             }
             .padding(10.dp, 5.dp, 10.dp, 0.dp)) {
-            if (viewModel.uiState.expandedTaskBox) {
+            if (viewModel.uiState.expandedTaskBox || viewModel.uiState.expandedStateBox) {
                 Text(
                     text = "New task",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier
                         .weight(1f)
-                        .clickable { viewModel.expandNewStateBox() }
                         .padding(horizontal = 10.dp)
+                        .clickable { viewModel.expandNewTaskBox() }
                 )
             }
             Box(modifier = Modifier
-                .clickable { viewModel.expandNewTaskBox() },
+                .clickable { viewModel.expandNewBox() },
                 contentAlignment = Alignment.Center) {
                 Icon( imageVector = Icons.Filled.Add,
                     contentDescription = "",
@@ -130,98 +131,33 @@ fun AddTab(
             }
         }
 
-        Box {
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                AnimatedVisibility(
-                    visible = viewModel.uiState.expandedTaskBox,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    //Data new task
-                    Column(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .fillMaxWidth()
-                            .wrapContentHeight(Alignment.CenterVertically)
-                            .padding(20.dp)
-                    )
-                    {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(5.dp)
-                        )
-                        Text(
-                            text = "Name:",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                        CustomBasicTextFieldComponent(
-                            "",
-                            {},
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.background
-                        )
-
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(5.dp)
-                        )
-                        Text(
-                            text = "Description:",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                        CustomBasicTextFieldComponent(
-                            "",
-                            {},
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.background,
-                            200.dp
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(10.dp)
-                        )
-                        TextButtonComponent(
-                            "Save",
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.background,
-                            { viewModel.expandNewStateBox() })
-
-                    }
-                }
-            }
-
-
-            if (viewModel.uiState.expandedStateBox) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            AnimatedVisibility(
+                visible = viewModel.uiState.expandedTaskBox,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
                 //Data new task
-                Column(modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth()
-                    .wrapContentHeight(Alignment.CenterVertically)
-                    .height(heightState)
-                    .padding(20.dp))
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primary)
+                        .fillMaxWidth()
+                        .wrapContentHeight(Alignment.CenterVertically)
+                        .padding(20.dp)
+                )
                 {
-                    Text(
-                        text = "New State",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.background
-                    )
                     Spacer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(20.dp)
+                            .height(5.dp)
                     )
                     Text(
                         text = "Name:",
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.background
                     )
-                    CustomBasicTextFieldComponent("",
+                    CustomBasicTextFieldComponent(
+                        "",
                         {},
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background
@@ -237,7 +173,70 @@ fun AddTab(
                         style = MaterialTheme.typography.headlineMedium,
                         color = MaterialTheme.colorScheme.background
                     )
-                    CustomBasicTextFieldComponent("",
+                    CustomBasicTextFieldComponent(
+                        "",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        200.dp
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp)
+                    )
+                    TextButtonComponent(
+                        "Save",
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        { viewModel.expandNewStateBox() })
+
+                }
+            }
+
+            AnimatedVisibility(
+                visible = viewModel.uiState.expandedStateBox,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                //Data new task
+                Column(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxWidth()
+                        .wrapContentHeight(Alignment.CenterVertically)
+                        .padding(20.dp)
+                )
+                {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                    )
+                    Text(
+                        text = "Name:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent(
+                        "",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                    )
+                    Text(
+                        text = "Description:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent(
+                        "",
                         {},
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
@@ -256,6 +255,7 @@ fun AddTab(
 
                 }
             }
+
         }
     }
 }

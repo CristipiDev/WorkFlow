@@ -41,20 +41,31 @@ class WorkflowViewModel @Inject constructor(
         return WorkflowModel()
     }
 
-    /** Show new task tab or new State **/
-    fun expandNewTaskBox() {
-        val showTask = !uiState.expandedTaskBox
+    fun expandNewBox() {
+        val show = !uiState.expandNewBox
+        var showTask = false
+        if (show) {
+            showTask = true
+        }
         uiState = uiState.copy(
+            expandNewBox = show,
             expandedTaskBox = showTask,
             expandedStateBox = false
         )
     }
 
     /** Show new task tab or new State **/
+    fun expandNewTaskBox() {
+        uiState = uiState.copy(
+            expandedTaskBox = true,
+            expandedStateBox = false
+        )
+    }
     fun expandNewStateBox() {
         val showState = !uiState.expandedStateBox
         uiState = uiState.copy(
-            expandedStateBox = showState
+            expandedStateBox = showState,
+            expandedTaskBox = false
         )
     }
 

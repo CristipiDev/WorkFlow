@@ -1,18 +1,14 @@
 package com.example.workflow.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
 import com.example.workflow.ui.workflow.WorkflowScreen
 import com.example.workflow.ui.workflowmenu.WorkflowMenuScreen
 
@@ -22,6 +18,7 @@ fun Navigation(
     onThemeUpdated: () -> Unit
 ) {
     val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = AppRoutes.WorkflowMenu.route

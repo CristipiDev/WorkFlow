@@ -1,15 +1,23 @@
 package com.example.workflow.ui.workflow.tabsadd
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -40,13 +48,14 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.workflow.ui.common.CustomBasicTextFieldComponent
 import com.example.workflow.ui.common.TextButtonComponent
 import com.example.workflow.ui.workflow.WorkflowViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AddTab(
     viewModel: WorkflowViewModel
@@ -54,10 +63,17 @@ fun AddTab(
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val density = LocalDensity.current
 
-    var expanded by remember { mutableStateOf(false) }
-
     val height by animateDpAsState(
-        targetValue = if (viewModel.uiState.expandedTaskBox) 400.dp else viewModel.uiState.iconHeight,
+        targetValue = if (viewModel.uiState.expandedTaskBox && !viewModel.uiState.expandedStateBox)
+            500.dp
+        else if (viewModel.uiState.expandedTaskBox && viewModel.uiState.expandedStateBox) 400.dp
+        else viewModel.uiState.iconHeight,
+        tween(durationMillis = 300, delayMillis = 300), label = ""
+    )
+
+    val heightState by animateDpAsState(
+        targetValue = if (viewModel.uiState.expandedStateBox) 400.dp
+        else 0.dp,
         tween(durationMillis = 300), label = ""
     )
 
@@ -69,7 +85,6 @@ fun AddTab(
         if (viewModel.uiState.expandedTaskBox) -45f else 0f,
         tween(durationMillis = 300), label = ""
     )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,11 +103,21 @@ fun AddTab(
                     it.size.height.toDp()
                 }
                 viewModel.setIconAddTaskHeight(iconHeight)
-            },
-            horizontalArrangement = Arrangement.End) {
+            }
+            .padding(10.dp, 5.dp, 10.dp, 0.dp)) {
+            if (viewModel.uiState.expandedTaskBox) {
+                Text(
+                    text = "New task",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.background,
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { viewModel.expandNewStateBox() }
+                        .padding(horizontal = 10.dp)
+                )
+            }
             Box(modifier = Modifier
-                .clickable { viewModel.expandNewTaskBox() }
-                .padding(10.dp, 5.dp, 10.dp, 0.dp),
+                .clickable { viewModel.expandNewTaskBox() },
                 contentAlignment = Alignment.Center) {
                 Icon( imageVector = Icons.Filled.Add,
                     contentDescription = "",
@@ -103,60 +128,122 @@ fun AddTab(
             }
         }
 
-        if (expanded) {
-            // Content for the expanded state
-            Column(modifier = Modifier
-                .background(
-                    MaterialTheme.colorScheme.primary
-                )
-                .fillMaxWidth()) {
-                Text("Bottom Sheet Expanded Content", modifier = Modifier.padding(16.dp))
+        Box {
+
+            if (viewModel.uiState.expandedTaskBox) {
+                //Data new task
+                Column(modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .fillMaxWidth()
+                    .wrapContentHeight(Alignment.CenterVertically)
+                    .padding(20.dp))
+                {
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                    )
+                    Text(
+                        text = "Name:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent("",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                    )
+                    Text(
+                        text = "Description:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent("",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        200.dp
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp)
+                    )
+                    TextButtonComponent(
+                        "Save",
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        { viewModel.expandNewStateBox() })
+
+                }
+            }
+            if (viewModel.uiState.expandedStateBox) {
+                //Data new task
+                Column(modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+                    .wrapContentHeight(Alignment.CenterVertically)
+                    .height(heightState)
+                    .padding(20.dp))
+                {
+                    Text(
+                        text = "New State",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                    )
+                    Text(
+                        text = "Name:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent("",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(5.dp)
+                    )
+                    Text(
+                        text = "Description:",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                    CustomBasicTextFieldComponent("",
+                        {},
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        200.dp
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(10.dp)
+                    )
+                    TextButtonComponent(
+                        "Save",
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                        {})
+
+                }
             }
         }
     }
-
-    //Data new task
-    /*Column(modifier = Modifier
-        .background(
-            MaterialTheme.colorScheme.primary,
-            RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
-        )
-        .fillMaxWidth()
-        .wrapContentHeight(Alignment.CenterVertically)
-        .padding(20.dp)
-        .onGloballyPositioned {
-            val newTaskBoxHeight = with(density) {
-                it.size.height.toDp()
-            }
-            viewModel.setNewTaskBoxHeight(newTaskBoxHeight)
-        })
-    {
-        Text(text = "New task",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.background,
-            modifier = Modifier.onGloballyPositioned {
-                val titleNewTaskHeight = with(density) {
-                    it.size.height.toDp()
-                }
-                viewModel.setTitleNewTaskHeight(titleNewTaskHeight)
-            })
-        Spacer(modifier = Modifier.fillMaxWidth().height(20.dp))
-        Text(text = "Name:",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.background)
-        CustomBasicTextFieldComponent("", {}, MaterialTheme.colorScheme.primary
-        , MaterialTheme.colorScheme.background)
-
-        Spacer(modifier = Modifier.fillMaxWidth().height(5.dp))
-        Text(text = "Description:",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.background)
-        CustomBasicTextFieldComponent("", {}, MaterialTheme.colorScheme.primary
-            , MaterialTheme.colorScheme.background, 200.dp)
-        Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
-        TextButtonComponent("Save", MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.background, {})
-
-    }*/
 }
 
 @Composable

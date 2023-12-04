@@ -45,7 +45,16 @@ class WorkflowViewModel @Inject constructor(
     fun expandNewTaskBox() {
         val showTask = !uiState.expandedTaskBox
         uiState = uiState.copy(
-            expandedTaskBox = showTask
+            expandedTaskBox = showTask,
+            expandedStateBox = false
+        )
+    }
+
+    /** Show new task tab or new State **/
+    fun expandNewStateBox() {
+        val showState = !uiState.expandedStateBox
+        uiState = uiState.copy(
+            expandedStateBox = showState
         )
     }
 
@@ -55,12 +64,5 @@ class WorkflowViewModel @Inject constructor(
             iconHeight = height
         )
     }
-
-    fun setNewTaskBoxHeight(height: Dp) {
-        uiState = uiState.copy(
-            newTaskBoxHeight = height
-        )
-    }
-
 
 }

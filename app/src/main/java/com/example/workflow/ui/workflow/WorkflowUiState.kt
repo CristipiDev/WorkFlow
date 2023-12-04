@@ -7,5 +7,5 @@ data class WorkflowUiState (
     val complitedPercentage: Float = 0.0f,
     val iconHeight: Dp = 54.dp,
     val expandedTaskBox: Boolean = false,
-    val newTaskBoxHeight: Dp = 0.dp
+    val expandedStateBox: Boolean = false
 )

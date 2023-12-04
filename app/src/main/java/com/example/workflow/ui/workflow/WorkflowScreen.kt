@@ -1,10 +1,12 @@
 package com.example.workflow.ui.workflow
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,17 +56,6 @@ fun WorkflowScreen(
             navController.popBackStack()
         }
     }
-
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-
-
-
-    val newTaksBoxOffset by animateDpAsState(
-        if (viewModel.uiState.expandedTaskBox)
-            viewModel.uiState.newTaskBoxHeight+20.dp
-        else 0.dp,
-        tween(durationMillis = 300), label = ""
-    )
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -91,18 +83,16 @@ fun WorkflowScreen(
 
                 }
 
+                val context = LocalContext.current
                 //Body
-                LazyColumn() {
+                LazyColumn(modifier = Modifier.clickable { Toast.makeText(context, "hola", Toast.LENGTH_SHORT).show() }) {
                     items(viewModel.dataState.workflowInfo.stateList) {state ->
                         StateColumn(state.stateTitle, state.taskList)
                     }
                 }
             }
-            val offsetBox = screenHeight-40.dp-viewModel.uiState.iconHeight-20.dp-newTaksBoxOffset
             //Box of the new task and state
             AddTab(viewModel)
-
-
         }
     }
 

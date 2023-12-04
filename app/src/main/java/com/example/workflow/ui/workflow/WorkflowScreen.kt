@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.workflow.domain.model.TaskModel
-import com.example.workflow.ui.workflow.tabsadd.AddTab
+import com.example.workflow.ui.workflow.newtaskstate.NewMainBoxFragment
 
 @Composable
 fun WorkflowScreen(
@@ -87,7 +87,7 @@ fun WorkflowScreen(
                 }
             }
             //Box of the new task and state
-            AddTab(viewModel)
+            NewMainBoxFragment(viewModel)
         }
     }
 

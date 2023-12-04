@@ -1,6 +1,7 @@
 package com.example.workflow.ui.workflow.tabsadd
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.animateDpAsState
@@ -8,8 +9,10 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -87,8 +90,7 @@ fun AddTab(
     )
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(height),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.End
     ) {
         //Add button
@@ -130,59 +132,71 @@ fun AddTab(
 
         Box {
 
-            if (viewModel.uiState.expandedTaskBox) {
-                //Data new task
-                Column(modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary)
-                    .fillMaxWidth()
-                    .wrapContentHeight(Alignment.CenterVertically)
-                    .padding(20.dp))
-                {
-                    Spacer(
+            Column(modifier = Modifier.fillMaxWidth()) {
+                AnimatedVisibility(
+                    visible = viewModel.uiState.expandedTaskBox,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    //Data new task
+                    Column(
                         modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
                             .fillMaxWidth()
-                            .height(5.dp)
+                            .wrapContentHeight(Alignment.CenterVertically)
+                            .padding(20.dp)
                     )
-                    Text(
-                        text = "Name:",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.background
-                    )
-                    CustomBasicTextFieldComponent("",
-                        {},
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background
-                    )
+                    {
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(5.dp)
+                        )
+                        Text(
+                            text = "Name:",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                        CustomBasicTextFieldComponent(
+                            "",
+                            {},
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.background
+                        )
 
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(5.dp)
-                    )
-                    Text(
-                        text = "Description:",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.background
-                    )
-                    CustomBasicTextFieldComponent("",
-                        {},
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background,
-                        200.dp
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(10.dp)
-                    )
-                    TextButtonComponent(
-                        "Save",
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background,
-                        { viewModel.expandNewStateBox() })
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(5.dp)
+                        )
+                        Text(
+                            text = "Description:",
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                        CustomBasicTextFieldComponent(
+                            "",
+                            {},
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.background,
+                            200.dp
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(10.dp)
+                        )
+                        TextButtonComponent(
+                            "Save",
+                            MaterialTheme.colorScheme.primary,
+                            MaterialTheme.colorScheme.background,
+                            { viewModel.expandNewStateBox() })
 
+                    }
                 }
             }
+
+
             if (viewModel.uiState.expandedStateBox) {
                 //Data new task
                 Column(modifier = Modifier

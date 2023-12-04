@@ -1,11 +1,10 @@
 package com.example.workflow.ui.workflow
 
-import androidx.compose.animation.AnimatedContentTransitionScope
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,21 +20,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.workflow.domain.model.TaskModel
+import com.example.workflow.ui.workflow.newtaskstate.NewMainBoxFragment
 
 @Composable
 fun WorkflowScreen(
@@ -43,6 +41,7 @@ fun WorkflowScreen(
     navController: NavController,
     workflowId: Int
 ) {
+
     val scrollState = rememberScrollState()
 
     LaunchedEffect(
@@ -63,46 +62,41 @@ fun WorkflowScreen(
             .background(
                 MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp)
-            )
-            .padding(20.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
+            )) {
+            Column(modifier = Modifier
+                .padding(20.dp)
+                .weight(1f)) {
+
+                //Header title of workflow and percentage
                 Row(verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.verticalScroll(scrollState)) {
                     Text(text = viewModel.dataState.workflowInfo.workflowTitle,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.weight(1f))
-                    statusCircularBarAndText(viewModel.uiState.complitedPercentage)
+                    StatusCircularBarAndText(viewModel.uiState.complitedPercentage)
 
                 }
-                LazyColumn() {
+
+                val context = LocalContext.current
+                //Body
+                LazyColumn(modifier = Modifier.clickable { Toast.makeText(context, "hola", Toast.LENGTH_SHORT).show() }) {
                     items(viewModel.dataState.workflowInfo.stateList) {state ->
-                        stateColumn(state.stateTitle, state.taskList)
+                        StateColumn(state.stateTitle, state.taskList)
                     }
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End) {
-                Box(modifier = Modifier
-                    .size(50.dp)
-                    .background(
-                        MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    ),
-                    contentAlignment = Alignment.Center) {
-                    Icon( imageVector = Icons.Filled.Add,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.background)
-                }
-            }
-
+            //Box of the new task and state
+            NewMainBoxFragment(viewModel)
         }
     }
 
 }
 
+
+
 @Composable
-private fun statusCircularBarAndText(
+private fun StatusCircularBarAndText(
     percentage: Float
 ){
     Box(contentAlignment = Alignment.Center) {
@@ -116,7 +110,7 @@ private fun statusCircularBarAndText(
 }
 
 @Composable
-private fun stateColumn(
+private fun StateColumn(
     stateTitle: String,
     taskList: ArrayList<TaskModel>
 ) {
@@ -126,13 +120,13 @@ private fun stateColumn(
 
     Column {
         taskList.forEach {task ->
-            taskCard(task)
+            TaskCard(task)
         }
     }
 }
 
 @Composable
-private fun taskCard(
+private fun TaskCard(
     task: TaskModel
 ) {
     var textColor = MaterialTheme.colorScheme.background

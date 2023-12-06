@@ -59,4 +59,5 @@ class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
             textFieldValue = newText
         )
     }
+
 }

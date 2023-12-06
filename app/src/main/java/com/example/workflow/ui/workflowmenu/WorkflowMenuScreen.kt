@@ -1,9 +1,16 @@
 package com.example.workflow.ui.workflowmenu
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +22,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Favorite
@@ -34,10 +44,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,7 +102,7 @@ fun WorkflowMenuScreen(
                     .weight(1f)) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(viewModel.dataState.workflowList) { workflow ->
-                        MenuItem(workflow.workflowId, workflow.workflowTitle, navController)
+                        MenuItem(workflow.workflowId, workflow.workflowTitle, navController, viewModel)
                     }
                 }
                 Box(modifier = Modifier
@@ -155,49 +168,63 @@ private fun HeaderRow(
 private fun MenuItem(
     id: Int,
     text: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: WorkflowMenuViewModel
 ){
-    val state = rememberDismissState(
-        confirmValueChange = {
-            if(it == DismissValue.DismissedToStart){}
-            true
-        }
+    var showSubMenu by remember {
+        mutableStateOf(false)
+    }
+
+    val offsetX by animateDpAsState(
+        if (showSubMenu) (-140).dp else 0.dp,
+        tween(durationMillis = 300), label = ""
     )
-    SwipeToDismiss(state = state,
-        background = {
-                     val color = when(state.dismissDirection){
-                         DismissDirection.EndToStart -> Color.Magenta
-                         DismissDirection.StartToEnd -> Color.Red
-                         null -> Color.Transparent
-                     }
-            Row(modifier = Modifier
-                .fillMaxSize()
-                .background(color)
-                .padding(30.dp, 10.dp, 0.dp, 10.dp),
-                horizontalArrangement = Arrangement.End) {
 
-                Icon(imageVector = Icons.Outlined.Favorite, contentDescription = "",
-                    modifier = Modifier.size(50.dp))
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = "",
-                    modifier = Modifier.size(50.dp))
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.CenterEnd) {
 
-
+        Row(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+            Box(modifier = Modifier.size(70.dp, 50.dp)
+                .clickable { Log.d("submenu", "Edit: $text") },
+                contentAlignment = Alignment.Center) {
+                Icon(imageVector = Icons.Filled.Edit, contentDescription = "",
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.primary)
             }
-        },
-        dismissContent = {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)) {
-                Text(text = text,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.background,
-                    modifier = Modifier
-                        .padding(30.dp, 10.dp, 30.dp, 10.dp)
-                        .fillMaxWidth()
-                        .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") })
+            Box(modifier = Modifier.size(70.dp, 50.dp)
+                .clickable { Log.d("submenu", "Delete: $text") },
+                contentAlignment = Alignment.Center) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = "",
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.primary)
             }
-        })
+        }
 
+        Box(modifier = Modifier
+            .offset(offsetX, 0.dp)
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures { change, dragAmount ->
+                    showSubMenu = dragAmount < 0
+                    change.consume()
+                }
+            }) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier
+                    .padding(30.dp, 10.dp, 30.dp, 10.dp)
+                    .fillMaxWidth()
+            )
+        }
+
+
+    }
 }
 
 

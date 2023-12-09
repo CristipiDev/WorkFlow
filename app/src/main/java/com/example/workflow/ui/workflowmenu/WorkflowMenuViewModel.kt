@@ -6,15 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.workflow.data.repository.WorkflowRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.example.workflow.domain.model.DataProvider
 import com.example.workflow.domain.model.WorkflowMenuModel
-import com.example.workflow.domain.model.WorkflowModel
+import com.example.workflow.domain.usecase.DeleteWorkflowMenuUseCase
 import com.example.workflow.domain.usecase.GetWorkflowMenuUseCase
 import com.example.workflow.domain.usecase.SetWorkflowMenuUseCase
 import com.example.workflow.domain.usecase.UpdateWorkflowMenuUseCase
@@ -28,7 +25,8 @@ import kotlinx.coroutines.launch
 class WorkflowMenuViewModel @Inject constructor(
     private val getWorkflowMenuUseCase: GetWorkflowMenuUseCase,
     private val setWorkflowMenuUseCase: SetWorkflowMenuUseCase,
-    private val updateWorkflowMenuUseCase: UpdateWorkflowMenuUseCase
+    private val updateWorkflowMenuUseCase: UpdateWorkflowMenuUseCase,
+    private val deleteWorkflowMenuUseCase: DeleteWorkflowMenuUseCase
 ): ViewModel() {
     var dataState: MutableState<List<WorkflowMenuModel>> = mutableStateOf(emptyList())
     var uiState by mutableStateOf(WorkflowMenuUiState(
@@ -59,6 +57,13 @@ class WorkflowMenuViewModel @Inject constructor(
         uiState = uiState.copy(
             showDialog = false
         )
+    }
+
+    fun deleteWorkflow(workflowId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteWorkflowMenuUseCase.setWorkflowId(workflowId)
+            deleteWorkflowMenuUseCase.invoke()
+        }
     }
 
     fun onSwitchDarkTheme(darkTheme: Boolean) {

@@ -11,6 +11,7 @@ interface WorkflowRepository {
     suspend fun setNewWorkflow(workflowName: String): Int
     suspend fun getAllWorkflows(): Flow<List<WorkflowMenuModel>>
     suspend fun updateWorkflow(workflowData: WorkflowMenuModel)
+    suspend fun deleteWorkflowFromId(workflowId: Int)
 }
 
 class WorkflowRepositoryImpl @Inject constructor(
@@ -39,6 +40,10 @@ class WorkflowRepositoryImpl @Inject constructor(
                                 workflowData.workflowId.toLong()
                             )
         workflowDao.updateWorkflow(workflowEntity)
+    }
+
+    override suspend fun deleteWorkflowFromId(workflowId: Int) {
+        workflowDao.deleteWorkflowFromId(workflowId.toLong())
     }
 
 }

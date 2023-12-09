@@ -193,7 +193,7 @@ private fun MenuItem(
                     tint = MaterialTheme.colorScheme.primary)
             }
             Box(modifier = Modifier.size(70.dp, 50.dp)
-                .clickable { Log.d("submenu", "Delete: ${workflowData.workflowTitle}")
+                .clickable { viewModel.deleteWorkflow(workflowData.workflowId)
                     showSubMenu = false },
                 contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.Filled.Delete, contentDescription = "",

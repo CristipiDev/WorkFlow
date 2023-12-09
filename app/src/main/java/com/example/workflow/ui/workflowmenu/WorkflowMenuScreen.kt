@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.workflow.domain.model.WorkflowMenuModel
 import com.example.workflow.domain.model.WorkflowModel
 import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
 import com.example.workflow.ui.common.CustomBasicTextFieldComponent
@@ -101,11 +102,13 @@ fun WorkflowMenuScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)) {
+
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(viewModel.dataState.workflowList) { workflow ->
+                    items(viewModel.dataState.value) { workflow ->
                         MenuItem(workflow, navController, viewModel)
                     }
                 }
+
                 Box(modifier = Modifier
                     .padding(30.dp, 40.dp, 30.dp, 0.dp)) {
                     TextButtonComponent(
@@ -162,7 +165,7 @@ private fun HeaderRow(
 
 @Composable
 private fun MenuItem(
-    workflowData: WorkflowModel,
+    workflowData: WorkflowMenuModel,
     navController: NavController,
     viewModel: WorkflowMenuViewModel
 ){
@@ -261,7 +264,7 @@ fun NewWorkflowDialog(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(10.dp))
-                    TextButtonComponent("Save", backgroundColor, buttonMainColor, {})
+                    TextButtonComponent("Save", backgroundColor, buttonMainColor, viewModel::setWorkflow)
                 }
 
             }

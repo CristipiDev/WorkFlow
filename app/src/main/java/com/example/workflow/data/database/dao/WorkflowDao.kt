@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.workflow.data.database.entity.WorkflowEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkflowDao {
@@ -12,7 +13,7 @@ interface WorkflowDao {
     fun insertNewWorkflow(workflow: WorkflowEntity): Long
 
     @Query("SELECT * FROM workflow ORDER BY id DESC")
-    fun getAllWorkflows(): List<WorkflowEntity>
+    fun getAllWorkflows(): Flow<List<WorkflowEntity>>
 
     @Query("SELECT * FROM workflow WHERE id = :workflowId")
     fun getWorkflowFromId(workflowId: Long): WorkflowEntity

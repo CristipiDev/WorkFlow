@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "workflow")
 data class WorkflowEntity (
-    @PrimaryKey val id: Long,
-    val name: String
+    val name: String,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0
 )

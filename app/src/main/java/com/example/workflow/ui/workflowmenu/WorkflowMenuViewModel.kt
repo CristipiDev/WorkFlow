@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.workflow.domain.model.DataProvider
+import com.example.workflow.domain.model.WorkflowModel
 
 @HiltViewModel
 class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
@@ -46,11 +47,13 @@ class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
         return colors
     }
 
-    fun setShowDialog() {
+    fun setShowDialog(data: WorkflowModel? = null) {
         val isShown = !uiState.showDialog
+        val workflowData = data?.let { data } ?: kotlin.run { WorkflowModel() }
         uiState = uiState.copy(
             showDialog = isShown,
-            textFieldValue = ""
+            workflowData = workflowData,
+            textFieldValue = workflowData.workflowTitle
         )
     }
 

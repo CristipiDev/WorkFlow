@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.workflow.domain.model.WorkflowModel
 import com.example.workflow.ui.aboutapp.WorkflowAboutAppScreen
 import com.example.workflow.ui.common.CustomBasicTextFieldComponent
 import com.example.workflow.ui.common.SwitchAndIconComponent
@@ -102,7 +103,7 @@ fun WorkflowMenuScreen(
                     .weight(1f)) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(viewModel.dataState.workflowList) { workflow ->
-                        MenuItem(workflow.workflowId, workflow.workflowTitle, navController, viewModel)
+                        MenuItem(workflow, navController, viewModel)
                     }
                 }
                 Box(modifier = Modifier
@@ -128,11 +129,7 @@ fun WorkflowMenuScreen(
             WorkflowAboutAppScreen(viewModel::setShowFirstColumn)
         }
         NewWorkflowDialog(
-            viewModel.uiState.showDialog,
-            viewModel::setShowDialog,
-            viewModel.uiState.textFieldValue,
-            viewModel::onTextFieldChange,
-            viewModel::setColorsTextButton,
+            viewModel,
             MaterialTheme.colorScheme.background,
             MaterialTheme.colorScheme.primary)
     }
@@ -163,11 +160,9 @@ private fun HeaderRow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MenuItem(
-    id: Int,
-    text: String,
+    workflowData: WorkflowModel,
     navController: NavController,
     viewModel: WorkflowMenuViewModel
 ){
@@ -187,14 +182,14 @@ private fun MenuItem(
 
         Row(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Box(modifier = Modifier.size(70.dp, 50.dp)
-                .clickable { Log.d("submenu", "Edit: $text") },
+                .clickable { viewModel.setShowDialog(workflowData) },
                 contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "",
                     modifier = Modifier.size(30.dp),
                     tint = MaterialTheme.colorScheme.primary)
             }
             Box(modifier = Modifier.size(70.dp, 50.dp)
-                .clickable { Log.d("submenu", "Delete: $text") },
+                .clickable { Log.d("submenu", "Delete: ${workflowData.workflowTitle}") },
                 contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.Filled.Delete, contentDescription = "",
                     modifier = Modifier.size(30.dp),
@@ -206,7 +201,7 @@ private fun MenuItem(
             .offset(offsetX, 0.dp)
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/$id") }
+            .clickable { navController.navigate(AppRoutes.WorkflowInfo.route + "/${workflowData.workflowId}") }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
                     showSubMenu = dragAmount < 0
@@ -214,7 +209,7 @@ private fun MenuItem(
                 }
             }) {
             Text(
-                text = text,
+                text = workflowData.workflowTitle,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
@@ -231,16 +226,12 @@ private fun MenuItem(
 
 @Composable
 fun NewWorkflowDialog(
-    showDialog: Boolean,
-    onDismissRequest: () -> Unit,
-    textFieldValue: String,
-    onChangeTextField: (String) -> Unit,
-    onPressedButtonListener: (Boolean, Color) -> Pair<Color, Color>,
+    viewModel: WorkflowMenuViewModel,
     backgroundColor: Color,
     buttonMainColor: Color
 ) {
-    if (showDialog) {
-        Dialog(onDismissRequest = { onDismissRequest() }) {
+    if (viewModel.uiState.showDialog) {
+        Dialog(onDismissRequest = { viewModel.setShowDialog() }) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -259,12 +250,13 @@ fun NewWorkflowDialog(
                         imageVector = Icons.Outlined.Close,
                         contentDescription = "Close pop-up for add new workflow",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickable { onDismissRequest() }
+                        modifier = Modifier.clickable { viewModel.setShowDialog() }
                     )
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(10.dp))
-                    CustomBasicTextFieldComponent(textFieldValue, onChangeTextField,
+                    CustomBasicTextFieldComponent(viewModel.uiState.textFieldValue,
+                        viewModel::onTextFieldChange,
                         MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
@@ -275,9 +267,4 @@ fun NewWorkflowDialog(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun Preview() {
 }

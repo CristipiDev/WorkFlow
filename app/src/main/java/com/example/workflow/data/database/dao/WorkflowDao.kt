@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.workflow.data.database.entity.WorkflowEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +18,9 @@ interface WorkflowDao {
 
     @Query("SELECT * FROM workflow WHERE id = :workflowId")
     fun getWorkflowFromId(workflowId: Long): WorkflowEntity
+
+    @Update
+    fun updateWorkflow(workflowEntity: WorkflowEntity)
 
     @Query("DELETE FROM workflow WHERE id = :workflowId")
     fun deleteWorkflowFromId(workflowId: Long)

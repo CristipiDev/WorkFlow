@@ -185,14 +185,16 @@ private fun MenuItem(
 
         Row(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Box(modifier = Modifier.size(70.dp, 50.dp)
-                .clickable { viewModel.setShowDialog(workflowData) },
+                .clickable { viewModel.setShowDialog(workflowData)
+                           showSubMenu = false },
                 contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "",
                     modifier = Modifier.size(30.dp),
                     tint = MaterialTheme.colorScheme.primary)
             }
             Box(modifier = Modifier.size(70.dp, 50.dp)
-                .clickable { Log.d("submenu", "Delete: ${workflowData.workflowTitle}") },
+                .clickable { Log.d("submenu", "Delete: ${workflowData.workflowTitle}")
+                    showSubMenu = false },
                 contentAlignment = Alignment.Center) {
                 Icon(imageVector = Icons.Filled.Delete, contentDescription = "",
                     modifier = Modifier.size(30.dp),

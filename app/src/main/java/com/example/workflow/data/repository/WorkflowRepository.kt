@@ -10,6 +10,7 @@ import javax.inject.Inject
 interface WorkflowRepository {
     suspend fun setNewWorkflow(workflowName: String): Int
     suspend fun getAllWorkflows(): Flow<List<WorkflowMenuModel>>
+    suspend fun updateWorkflow(workflowData: WorkflowMenuModel)
 }
 
 class WorkflowRepositoryImpl @Inject constructor(
@@ -30,6 +31,14 @@ class WorkflowRepositoryImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override suspend fun updateWorkflow(workflowData: WorkflowMenuModel) {
+        val workflowEntity = WorkflowEntity(
+                                workflowData.workflowTitle,
+                                workflowData.workflowId.toLong()
+                            )
+        workflowDao.updateWorkflow(workflowEntity)
     }
 
 }

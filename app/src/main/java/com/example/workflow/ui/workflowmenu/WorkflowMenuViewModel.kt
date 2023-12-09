@@ -17,6 +17,7 @@ import com.example.workflow.domain.model.WorkflowMenuModel
 import com.example.workflow.domain.model.WorkflowModel
 import com.example.workflow.domain.usecase.GetWorkflowMenuUseCase
 import com.example.workflow.domain.usecase.SetWorkflowMenuUseCase
+import com.example.workflow.domain.usecase.UpdateWorkflowMenuUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
@@ -26,7 +27,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class WorkflowMenuViewModel @Inject constructor(
     private val getWorkflowMenuUseCase: GetWorkflowMenuUseCase,
-    private val setWorkflowMenuUseCase: SetWorkflowMenuUseCase
+    private val setWorkflowMenuUseCase: SetWorkflowMenuUseCase,
+    private val updateWorkflowMenuUseCase: UpdateWorkflowMenuUseCase
 ): ViewModel() {
     var dataState: MutableState<List<WorkflowMenuModel>> = mutableStateOf(emptyList())
     var uiState by mutableStateOf(WorkflowMenuUiState(
@@ -45,8 +47,14 @@ class WorkflowMenuViewModel @Inject constructor(
 
     fun setWorkflow() {
         viewModelScope.launch(Dispatchers.IO) {
-            setWorkflowMenuUseCase.setWorkflowName(uiState.workflowData.workflowTitle)
-            setWorkflowMenuUseCase.invoke()
+            if (uiState.workflowData.workflowId == -1) {
+                setWorkflowMenuUseCase.setWorkflowName(uiState.workflowData.workflowTitle)
+                setWorkflowMenuUseCase.invoke()
+            }
+            else {
+                updateWorkflowMenuUseCase.setWorkflowData(uiState.workflowData)
+                updateWorkflowMenuUseCase.invoke()
+            }
         }
         uiState = uiState.copy(
             showDialog = false

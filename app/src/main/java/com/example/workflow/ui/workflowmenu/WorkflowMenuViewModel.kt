@@ -52,14 +52,16 @@ class WorkflowMenuViewModel @Inject constructor(): ViewModel() {
         val workflowData = data?.let { data } ?: kotlin.run { WorkflowModel() }
         uiState = uiState.copy(
             showDialog = isShown,
-            workflowData = workflowData,
-            textFieldValue = workflowData.workflowTitle
+            workflowData = workflowData
         )
     }
 
     fun onTextFieldChange(newText: String) {
+        val workflowData = WorkflowModel(
+            uiState.workflowData.workflowId,
+            newText, uiState.workflowData.stateList)
         uiState = uiState.copy(
-            textFieldValue = newText
+            workflowData = workflowData
         )
     }
 

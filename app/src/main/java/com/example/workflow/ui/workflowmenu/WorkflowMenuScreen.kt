@@ -255,7 +255,7 @@ fun NewWorkflowDialog(
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(10.dp))
-                    CustomBasicTextFieldComponent(viewModel.uiState.textFieldValue,
+                    CustomBasicTextFieldComponent(viewModel.uiState.workflowData.workflowTitle,
                         viewModel::onTextFieldChange,
                         MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier

@@ -27,7 +27,7 @@ class WorkflowRepositoryImpl @Inject constructor(
         return workflowDao.getAllWorkflows().map {list ->
             list.map {workflowDao ->
                 WorkflowMenuModel(
-                    workflowId = workflowDao.id.toInt(),
+                    workflowId = workflowDao.workflowId.toInt(),
                     workflowTitle =  workflowDao.name
                 )
             }

@@ -13,15 +13,15 @@ interface WorkflowDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewWorkflow(workflow: WorkflowEntity): Long
 
-    @Query("SELECT * FROM workflow ORDER BY id DESC")
+    @Query("SELECT * FROM workflow ORDER BY workflowId ASC")
     fun getAllWorkflows(): Flow<List<WorkflowEntity>>
 
-    @Query("SELECT * FROM workflow WHERE id = :workflowId")
+    @Query("SELECT * FROM workflow WHERE workflowId = :workflowId")
     fun getWorkflowFromId(workflowId: Long): WorkflowEntity
 
     @Update
     fun updateWorkflow(workflowEntity: WorkflowEntity)
 
-    @Query("DELETE FROM workflow WHERE id = :workflowId")
+    @Query("DELETE FROM workflow WHERE workflowId = :workflowId")
     fun deleteWorkflowFromId(workflowId: Long)
 }

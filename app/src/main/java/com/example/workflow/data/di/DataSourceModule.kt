@@ -3,6 +3,7 @@ package com.example.workflow.data.di
 import android.content.Context
 import androidx.room.Room
 import com.example.workflow.data.database.WorkflowLocalDataSource
+import com.example.workflow.data.database.dao.StateDao
 import com.example.workflow.data.database.dao.WorkflowDao
 import dagger.Module
 import dagger.Provides
@@ -27,4 +28,8 @@ class DataSourceModule {
     @Singleton
     @Provides
     fun workflowDao(db: WorkflowLocalDataSource): WorkflowDao = db.workflowDao()
+
+    @Singleton
+    @Provides
+    fun stateDao(db: WorkflowLocalDataSource): StateDao = db.stateDao()
 }
